@@ -140,7 +140,7 @@ function App() {
         )}
       </div>
       <a
-        href="https://swarajya.gumlet.io/swarajya/2019-01/838ce8fe-f73d-4562-9d25-a8d04378a9a6/GettyImages_812001522.jpg?w=610&q=50&compress=true&format=auto"
+        href="/sample.jpg"
         className="m-4 text-sm mx-auto underline text-slate-500"
       >
         Sample Driving License
