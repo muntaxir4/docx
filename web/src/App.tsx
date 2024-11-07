@@ -6,7 +6,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [responseError, setResponseError] = useState<string | null>(null);
-
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -38,7 +38,7 @@ function App() {
     try {
       setResponseError(null);
       setResponseData("Processing...");
-      const response = await fetch("http://localhost:3000/api/upload", {
+      const response = await fetch(API_URL + "/api/upload", {
         method: "POST",
         body: formData,
       });
@@ -110,7 +110,7 @@ function App() {
               />
               {error && <p className="text-red-500">{error}</p>}
               <div className="grid grid-cols-2 content-start items-center mx-auto gap-3">
-                <label className="mx-auto cursor-pointer bg-emerald-300 p-2 rounded">
+                <label className="mx-auto cursor-pointer bg-emerald-300 p-2 rounded text-center">
                   Click to change image
                   <input
                     type="file"

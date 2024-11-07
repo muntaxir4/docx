@@ -3,6 +3,7 @@ import cors from "cors";
 import multer from "multer";
 import { createWorker } from "tesseract.js";
 import { HfInference } from "@huggingface/inference";
+import path from "path";
 
 const client = new HfInference(process.env.HF_API_KEY);
 
@@ -10,12 +11,16 @@ const client = new HfInference(process.env.HF_API_KEY);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable CORS for localhost:5173
+// Enable CORS
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "*",
   })
 );
+
+app.get("/", (_, res) => {
+  res.send("DOCX API");
+});
 
 // Configure Multer to store files in memory
 const storage = multer.memoryStorage();
@@ -59,7 +64,15 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
   }
 
   try {
-    const worker = await createWorker("eng");
+    // Specify corePath for wasm support in Vercel
+    const worker = await createWorker("eng", undefined, {
+      corePath: path.join(
+        __dirname,
+        "node_modules",
+        "tesseract.js-core",
+        "tesseract-core-simd.wasm"
+      ),
+    });
 
     const {
       data: { text },
@@ -118,7 +131,7 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
       if (chunk.choices && chunk.choices.length > 0) {
         const newContent = chunk.choices[0].delta.content;
         out += newContent;
-        console.log(newContent);
+        // console.log(newContent);
       }
     }
 
@@ -140,7 +153,14 @@ app.post("/api/upload2", upload.single("image"), async (req, res) => {
   }
 
   try {
-    const worker = await createWorker("eng");
+    const worker = await createWorker("eng", undefined, {
+      corePath: path.join(
+        __dirname,
+        "node_modules",
+        "tesseract.js-core",
+        "tesseract-core-simd.wasm"
+      ),
+    });
 
     const {
       data: { text },
